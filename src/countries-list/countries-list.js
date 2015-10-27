@@ -1,18 +1,46 @@
 viewsModule.config(function($routeProvider){
     $routeProvider.when('/countries', {
         templateUrl: './countries-list/countries-list.html',
-        controller: 'CountriesListController as countriesList'
+        controller: 'CountriesListController as countriesListControl'
     })
-}).controller('CountriesListController', ['countriesAppCountries', '$q', function(countriesAppCountries, $q){
+}).controller('CountriesListController', ['countriesAppCountries', '$q', '$location', function(countriesAppCountries, $q, $location){
     // countries code here
-    countriesAppCountries()
-        .then(function(result){
-            var data = xml2json.parser(result.data);
-            if(data.geonames.country.length > 0){
-                console.log('No Results');
-            }
+
+    this.init = function(){
+        //initialise the countries
+        this.countries = [];
+        this.countriesSize = this.countries.length;
+        this.retrieveCountries();
+    };
+
+    this.retrieveCountries = function(){
+        countriesAppCountries()
+            .then(
+                this.processCountries.bind(this),
+                this.processError.bind(this)
+            )
+    };
+
+    this.processError = function(error){
+        console.log(error);
+    };
+
+    this.processCountries = function(results){
+        var data = xml2json.parser(results.data);
+
+
+        if(Array.isArray(data.geonames.country)){
+            //get all of the results for the country
             this.countries = data.geonames.country;
-        }, function(error){
-            console.log(error);
-        });
+            this.countriesSize = this.countries.length;
+        }
+
+    };
+
+    this.goToCountry = function(country){
+        $location.path('/#/countries/' + country);
+    };
+
+    this.init();
+
 }]);
