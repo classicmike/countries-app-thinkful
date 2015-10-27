@@ -8,26 +8,37 @@ viewsModule.config(function($routeProvider){
 
     this.init = function(){
         //initialise the countries
+        this.countriesListLoading = false;
         this.countries = [];
         this.countriesSize = this.countries.length;
+
         this.retrieveCountries();
     };
 
 
     this.retrieveCountries = function(){
+        console.log('Countries loading is fired');
+        this.countriesListLoading = true;
+
+        //countries list loaded
         countriesAppCountries()
             .then(
                 this.processCountries.bind(this),
                 this.processError.bind(this)
-            )
+        ).then(function(){
+            console.log('Countries have been FULLY LOADED');
+            this.countriesListLoading = false;
+        });
+
     };
 
     this.processError = function(error){
         console.log(error);
+        return error;
     };
 
     this.processCountries = function(results){
-        var data = results.data;
+        var data = results;
         console.log(results);
 
         if(Array.isArray(data.geonames)){
@@ -35,6 +46,8 @@ viewsModule.config(function($routeProvider){
             this.countries = data.geonames;
             this.countriesSize = this.countries.length;
         }
+
+        return results;
 
     };
 

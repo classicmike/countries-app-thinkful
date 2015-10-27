@@ -19,9 +19,13 @@
                     <td>{{ country.population | commaEveryThousand }}</td>
                     <td>{{ country.continent }}</td>
                 </tr>
-                <tr ng-if="countriesListControl.countriesSize === 0">
+                <tr ng-if="countriesListControl.countriesSize === 0 && countriesListControl.countriesListLoading === false">
                     <!-- todo: Loading state needs to be in there -->
                     <td colspan="6">Unfortunately there were no countries.</td>
+                </tr>
+                <tr ng-if="countriesListControl.countriesListLoading === true">
+                    <!-- todo: Loading state needs to be in there -->
+                    <td colspan="6">Getting the list of countries. Please wait...</td>
                 </tr>
             </table>
         </div>

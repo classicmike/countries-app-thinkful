@@ -7,23 +7,25 @@ angular.module('countriesAppLibrary', ['countriesAppHelpers'])
     .constant('SEARCH_API_ENDPOINT_NAME', 'searchJSON')
     .constant('NEIGHBOURS_API_ENDPOINT_NAME', 'neighboursJSON')
     .constant('AJAX_METHOD_GET', 'GET')
-    .factory('countriesAppCountries', ['$http', '$q', 'API_URL', 'API_USERNAME', 'COUNTRIES_API_ENDPOINT_NAME', 'API_URL_REPLACE', function($http, $q, API_URL, API_USERNAME, COUNTRIES_API_ENDPOINT_NAME, API_URL_REPLACE){
+    .factory('countriesAppCountries', ['$http', '$q', 'API_URL', 'API_USERNAME', 'COUNTRIES_API_ENDPOINT_NAME', 'AJAX_METHOD_GET', 'countriesAppAjax', function($http, $q, API_URL, API_USERNAME, COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET, countriesAppAjax){
         // going to get the http request for the
         return function(){
-            var requestUrl = API_URL.replace(API_URL_REPLACE, COUNTRIES_API_ENDPOINT_NAME) + API_USERNAME;
+            var defer = $q.defer();
 
-            return $http({
-                method: 'GET',
-                url: requestUrl,
-                cache: true
-            })
+            countriesAppAjax(COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET)
+                .then(function(result){
+                   defer.resolve(result);
+                }, function(error){
+                    defer.reject(error);
+                });
+
+            return defer.promise;
         }
     }]).factory('countriesAppAjax', ['$http', '$q', 'API_URL', 'API_USERNAME', 'API_URL_REPLACE', 'AJAX_METHOD_GET', function($http, $q, API_URL, API_USERNAME, API_URL_REPLACE, AJAX_METHOD_GET){
         return function(path, method, data){
             if(!method){
                 method = AJAX_METHOD_GET;
             }
-
 
             if(!data && typeof data !== 'Object'){
                 data = {};
@@ -43,12 +45,9 @@ angular.module('countriesAppLibrary', ['countriesAppHelpers'])
                 config.data = data;
             }
 
-
             var defer = $q.defer();
 
             $http(config).then(function(response){
-                console.log('Get the response for the ajax.');
-                console.log(response);
                 defer.resolve(response.data);
             }, function(error){
                 defer.reject(error);
@@ -59,8 +58,6 @@ angular.module('countriesAppLibrary', ['countriesAppHelpers'])
     }]).factory('countryAppInfo', [
         '$http', '$q', 'COUNTRIES_API_ENDPOINT_NAME', 'AJAX_METHOD_GET', 'countriesAppAjax' , function($http, $q, COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET, countriesAppAjax){
             return function(country){
-                console.log('Getting the country info');
-                console.log(country);
                 var defer = $q.defer();
 
                 //if no country was supplied....
@@ -89,8 +86,6 @@ angular.module('countriesAppLibrary', ['countriesAppHelpers'])
         }
     ]).factory('countryAppCapitalInfo', ['$http', '$q', 'SEARCH_API_ENDPOINT_NAME', 'AJAX_METHOD_GET', 'countriesAppAjax' , function($http, $q, SEARCH_API_ENDPOINT_NAME, AJAX_METHOD_GET, countriesAppAjax){
         return function(capitalCity, country){
-            console.log('Getting the capital city');
-            console.log(capitalCity);
             var defer = $q.defer();
 
             //if no country was supplied....
