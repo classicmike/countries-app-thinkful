@@ -26,12 +26,12 @@ viewsModule.config(function($routeProvider){
     };
 
     this.processCountries = function(results){
-        var data = xml2json.parser(results.data);
+        var data = results.data;
+        console.log(results);
 
-
-        if(Array.isArray(data.geonames.country)){
+        if(Array.isArray(data.geonames)){
             //get all of the results for the country
-            this.countries = data.geonames.country;
+            this.countries = data.geonames;
             this.countriesSize = this.countries.length;
         }
 

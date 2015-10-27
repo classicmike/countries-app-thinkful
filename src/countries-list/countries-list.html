@@ -11,11 +11,11 @@
                     <th>Population</th>
                     <th>Continent</th>
                 </tr>
-                <tr ng-if="countriesListControl.countriesSize > 0" ng-repeat="country in countriesListControl.countries" ng-click="countriesListControl.goToCountry(country.countrycode)">
-                    <td>{{ country.countryname }}</td>
-                    <td>{{ country.countrycode }}</td>
+                <tr ng-if="countriesListControl.countriesSize > 0" ng-repeat="country in countriesListControl.countries" ng-click="countriesListControl.goToCountry(country.countryCode)">
+                    <td>{{ country.countryName }}</td>
+                    <td>{{ country.countryCode }}</td>
                     <td>{{ country.capital }}</td>
-                    <td>{{ country.areainsqkm | commaEveryThousand }}</td>
+                    <td>{{ country.areaInSqKm | commaEveryThousand }}</td>
                     <td>{{ country.population | commaEveryThousand }}</td>
                     <td>{{ country.continent }}</td>
                 </tr>
