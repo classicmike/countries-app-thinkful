@@ -7,3 +7,75 @@
 .table-with-row-pointer tr {
     cursor: pointer;
 }
+
+.table.table-no-border>tbody>tr>td, .table.table-no-border>tbody>tr>th, .table.table-no-border>tfoot>tr>td, .table.table-no-border>tfoot>tr>th, .table.table-no-border>thead>tr>td, .table.table-no-border>thead>tr>th {
+    border: none !important;
+}
+
+.neighbours {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.neighbours li {
+    display: inline;
+    margin-right: 1.25rem;
+}
+
+.table-info th {
+    width: 50%;
+}
+
+.loading {
+    position: relative;
+    height: 100%;
+}
+
+.loading:before {
+    position: absolute;
+    content: "";
+    left: 0;
+    bottom: 0;
+    right: 0;
+    top: 0;
+    z-index: 1000;
+    background: rgba(255,255,255, 0.9) no-repeat center center;
+    background-image: url('../img/loading-animation.gif');
+    min-height: 128px;
+}
+
+
+.animate-view-container {
+    position: relative;
+    min-height: 100%;
+}
+
+.animate-view.ng-enter,
+.animate-view.ng-leave {
+    transition: 1s linear all;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #eee;
+}
+
+.animate-view.ng-enter {
+    opacity: 0;
+    z-index: 100;
+}
+
+.animate-view.ng-enter.ng-enter-active {
+    opacity: 1;
+}
+
+.animate-view.ng-leave {
+    opacity: 1;
+    z-index: 99;
+}
+
+.animate-view.ng-leave.ng-leave-active {
+    opacity: 0;
+}

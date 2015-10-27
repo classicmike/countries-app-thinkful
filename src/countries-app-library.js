@@ -1,10 +1,11 @@
-angular.module('countriesAppLibrary', [])
+angular.module('countriesAppLibrary', ['countriesAppHelpers'])
     //definition of constants
     .constant('API_URL', 'http://api.geonames.org/{PATH_WITH_PARAMETERS}')
     .constant('API_URL_REPLACE', '{PATH_WITH_PARAMETERS}')
     .constant('COUNTRIES_API_ENDPOINT_NAME', 'countryInfoJSON')
     .constant('API_USERNAME', '?username=koramaiku')
     .constant('SEARCH_API_ENDPOINT_NAME', 'searchJSON')
+    .constant('NEIGHBOURS_API_ENDPOINT_NAME', 'neighboursJSON')
     .constant('AJAX_METHOD_GET', 'GET')
     .factory('countriesAppCountries', ['$http', '$q', 'API_URL', 'API_USERNAME', 'COUNTRIES_API_ENDPOINT_NAME', 'API_URL_REPLACE', function($http, $q, API_URL, API_USERNAME, COUNTRIES_API_ENDPOINT_NAME, API_URL_REPLACE){
         // going to get the http request for the
@@ -17,13 +18,12 @@ angular.module('countriesAppLibrary', [])
                 cache: true
             })
         }
-    }]).factory('countriesAppAjax', ['$http', '$q', 'API_URL', 'API_USERNAME', 'API_URL_REPLACE', 'validateHttpRequestMethod', function($http, $q, API_URL, API_USERNAME, API_URL_REPLACE){
+    }]).factory('countriesAppAjax', ['$http', '$q', 'API_URL', 'API_USERNAME', 'API_URL_REPLACE', 'AJAX_METHOD_GET', function($http, $q, API_URL, API_USERNAME, API_URL_REPLACE, AJAX_METHOD_GET){
         return function(path, method, data){
             if(!method){
                 method = AJAX_METHOD_GET;
             }
 
-            method = validateHttpRequestMethod(method);
 
             if(!data && typeof data !== 'Object'){
                 data = {};
@@ -31,23 +31,36 @@ angular.module('countriesAppLibrary', [])
 
             var requestUrl = API_URL.replace(API_URL_REPLACE, path) + API_USERNAME;
 
-            var defer = $q.defer();
-            $http({
+            var config = {
                 method: method,
-                url: requestUrl,
-                data: data,
-                cache: true
-            }).then(function(response){
-                $q.resolve(response.data);
+                url: requestUrl
+            };
+
+            //check if the reqeust is a get and if so change the http config
+            if(method === AJAX_METHOD_GET){
+                config.params = data;
+            } else {
+                config.data = data;
+            }
+
+
+            var defer = $q.defer();
+
+            $http(config).then(function(response){
+                console.log('Get the response for the ajax.');
+                console.log(response);
+                defer.resolve(response.data);
             }, function(error){
-                $q.reject(error);
+                defer.reject(error);
             });
 
-            return defer.promise();
+            return defer.promise;
         }
     }]).factory('countryAppInfo', [
-        '$http', '$q', 'API_USERNAME', 'COUNTRIES_API_ENDPOINT_NAME', 'AJAX_METHOD_GET', 'countriesAppAjax' , function($http, $q, COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET, countriesAppAjax){
+        '$http', '$q', 'COUNTRIES_API_ENDPOINT_NAME', 'AJAX_METHOD_GET', 'countriesAppAjax' , function($http, $q, COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET, countriesAppAjax){
             return function(country){
+                console.log('Getting the country info');
+                console.log(country);
                 var defer = $q.defer();
 
                 //if no country was supplied....
@@ -63,17 +76,21 @@ angular.module('countriesAppLibrary', [])
                 //need to run the request for the signature
                 countriesAppAjax(COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET, requestData)
                     .then(function(result){
-                        $q.resolve(result.data);
+                        console.log('Getting the country');
+                        console.log(result.geonames[0]);
+                        defer.resolve(result.geonames[0]);
                     }, function(error){
-                        $q.reject(error);
+                        defer.reject(error);
                     });
 
-                return defer.promise();
+                return defer.promise;
 
             }
         }
-    ]).factory('countryAppCapitalInfo', ['$http', '$q', 'API_USERNAME', 'SEARCH_API_ENDPOINT_NAME', 'AJAX_METHOD_GET', 'countriesAppAjax' , function($http, $q, SEARCH_API_ENDPOINT_NAME, AJAX_METHOD_GET, countriesAppAjax){
+    ]).factory('countryAppCapitalInfo', ['$http', '$q', 'SEARCH_API_ENDPOINT_NAME', 'AJAX_METHOD_GET', 'countriesAppAjax' , function($http, $q, SEARCH_API_ENDPOINT_NAME, AJAX_METHOD_GET, countriesAppAjax){
         return function(capitalCity, country){
+            console.log('Getting the capital city');
+            console.log(capitalCity);
             var defer = $q.defer();
 
             //if no country was supplied....
@@ -92,33 +109,60 @@ angular.module('countriesAppLibrary', [])
             //need to run the request for the signature
             countriesAppAjax(SEARCH_API_ENDPOINT_NAME, AJAX_METHOD_GET, requestData)
                 .then(function(response){
+                    console.log(response);
                     var results = response.geonames;
                     if(response.totalResultsCount > 0){
-                        console.log('The results count is: ' + response.data.totalResultsCount);
+                        console.log('The results count is: ' + response.totalResultsCount);
 
 
                         for(var i = 0; i < response.totalResultsCount; i++){
                             var result = results[i];
                             if(result.fcodeName.indexOf('capital') !== false){
-                                $q.resolve(result);
+                                defer.resolve(result);
                                 break;
                             } else {
                                 //need to check if this is the last count
                                 if(i === response.totalResultsCount -1){
-                                    $q.reject({type: 'no-capital-matches', message: 'No Captials were found.'});
+                                    defer.reject({type: 'no-capital-matches', message: 'No Capitals were found.'});
                                 }
                             }
 
                         }
                     } else {
-                        $q.reject({type: 'no-capital-matches', message: 'No Captials were found.'});
+                        defer.reject({type: 'no-capital-matches', message: 'No Captials were found.'});
                     }
 
                 }, function(error){
-                    $q.reject(error);
+                    defer.reject(error);
                 });
 
-            return defer.promise();
+            return defer.promise;
+        }
+    }]).factory('countryAppNeighboursInfo', ['$http', '$q', 'NEIGHBOURS_API_ENDPOINT_NAME', 'AJAX_METHOD_GET', 'countriesAppAjax' , function($http, $q, NEIGHBOURS_API_ENDPOINT_NAME, AJAX_METHOD_GET, countriesAppAjax){
+        return function(geonameId){
+            var defer = $q.defer();
+
+            //if no country was supplied....
+            if(!geonameId){
+                defer.reject({type: 'no-geoname-id', message: 'No Geoname id was supplied'});
+            }
+
+            //request data
+            var requestData = {
+                geonameId: geonameId
+            };
+
+            //need to run the request for the signature
+            countriesAppAjax(NEIGHBOURS_API_ENDPOINT_NAME, AJAX_METHOD_GET, requestData)
+                .then(function(response){
+                    console.log(response);
+                    var results = response.geonames;
+                    defer.resolve(results);
+                }, function(error){
+                    defer.reject(error);
+                });
+
+            return defer.promise;
 
         }
     }]);

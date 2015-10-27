@@ -1,5 +1,5 @@
 angular.module('countriesAppHelpers', [])
-    .value('validateHttpRequestMethod', [function(){
+    .value('validateHttpRequestMethod', function(){
         return function(suppliedMethod){
             var methodReturned = 'GET';
             var lowercasedSuppliedMethod = suppliedMethod.toLowerCase();
@@ -10,4 +10,4 @@ angular.module('countriesAppHelpers', [])
 
             return methodReturned;
         };
-    }]);
+    });

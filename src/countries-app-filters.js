@@ -16,4 +16,13 @@ angular.module('countriesAppFilters', [])
             }
             return x1 + x2;
         }
+    })
+    .filter('intergerVal', function(){
+        return function(input){
+            if(!input){
+                return input;
+            }
+
+            return parseInt(input);
+        }
     });

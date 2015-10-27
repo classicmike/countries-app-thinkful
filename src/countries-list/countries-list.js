@@ -3,7 +3,7 @@ viewsModule.config(function($routeProvider){
         templateUrl: './countries-list/countries-list.html',
         controller: 'CountriesListController as countriesListControl'
     })
-}).controller('CountriesListController', ['countriesAppCountries', '$q', '$location', function(countriesAppCountries, $q, $location){
+}).controller('CountriesListController', ['countriesAppCountries', '$q', '$location', '$sce', function(countriesAppCountries, $q, $location, $sce){
     // countries code here
 
     this.init = function(){
@@ -12,6 +12,7 @@ viewsModule.config(function($routeProvider){
         this.countriesSize = this.countries.length;
         this.retrieveCountries();
     };
+
 
     this.retrieveCountries = function(){
         countriesAppCountries()
@@ -38,7 +39,7 @@ viewsModule.config(function($routeProvider){
     };
 
     this.goToCountry = function(country){
-        $location.path('/#/countries/' + country);
+        $location.url("\/countries\/" + country);
     };
 
     this.init();
