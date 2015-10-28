@@ -6,9 +6,9 @@ var tasks = requireDir('./gulp/tasks', { recurse: true });
 var config = require('./gulp/config');
 
 // lists out all of the tasks that are required for the project
-tasks.browserify(config.browserify);
-tasks.jshint(config.jshint.config);
+tasks.clean(config.clean, config.destination);
+//tasks.connect(config.connect);
+tasks.copy(config.copy, config.destination);
+tasks.usemin(config.usemin, config.indexFile, config.destination);
 tasks.images(config.images.config);
-tasks.html_default(config.html.config);
-tasks.styles(config.styles.config);
-tasks.watch(config.watch);
+tasks.build(config.build);

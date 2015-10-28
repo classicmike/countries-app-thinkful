@@ -2,50 +2,31 @@ var dest = './build';
 var src = './src';
 
 module.exports = {
-    browserify: {
-        debug: true,
-        bundleConfigs: {
-            src: src + '/js/main.js',
-            dest: dest + '/js/',
-            sourceDestinationFile: 'main.js'
-        }
+    destination: dest,
+    indexFile: src + '/index.html',
+    copy: {
+        assetsToCopy: [
+            src + '/**/*.html',
+            '!' + src + '/app/index.html',
+            '!' + src + '/app/lib/index.html'
+        ]
     },
-    jshint : {
-        config: {
-            src: dest + '/js/*.js'
-        }
+    clean: {
     },
-    html: {
-        config: {
-            src: src + '/index.html',
-            dest: dest
-        }
+    usemin: {
     },
-    styles: {
-        config: {
-            src: src + '/css/*.css',
-            dest: dest + '/css/',
-            sourceDestinationFile: 'main.css'
-        }
+    connect: {
+      root: src
     },
     images: {
         config: {
             src: src + '/img/**/*',
-            dest: dest + '/img/'
+                dest: dest + '/img/'
         }
     },
-    watch: [
-        {
-            watchLocation: src + '/js/**/*.js',
-            task: 'browserify'
-        },
-        {
-            watchLocation: src + '/index.html',
-            task: 'images'
-        },
-        {
-            watchLocation: src + '/css/**/*.css',
-            task: 'styles'
-        }
-    ]
+    build: {
+        tasks: [
+            'usemin'
+        ]
+    }
 };

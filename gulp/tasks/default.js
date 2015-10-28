@@ -1,5 +1,5 @@
 var gulp = require('gulp');
 
-var jshint = require('./jshint');
+var jshint = require('./connect');
 
-gulp.task('default', ['jshint']);
+gulp.task('default', ['connect']);

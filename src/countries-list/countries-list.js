@@ -25,21 +25,21 @@ viewsModule.config(function($routeProvider){
             .then(
                 this.processCountries.bind(this),
                 this.processError.bind(this)
-        ).then(function(){
-            console.log('Countries have been FULLY LOADED');
-            this.countriesListLoading = false;
-        });
+            )
+            .then(this.removeLoading.bind(this));
 
     };
 
+    this.removeLoading = function(){
+        this.countriesListLoading = false;
+    };
+
     this.processError = function(error){
-        console.log(error);
         return error;
     };
 
     this.processCountries = function(results){
         var data = results;
-        console.log(results);
 
         if(Array.isArray(data.geonames)){
             //get all of the results for the country
