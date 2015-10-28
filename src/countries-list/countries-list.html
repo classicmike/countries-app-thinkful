@@ -1,7 +1,6 @@
 <div class="row">
     <div class="col-xs-12">
         <div class="countries-table-wrapper">
-            <p>The number of countries is: {{ countriesListControl.countriesSize ? countriesListControl.countriesSize: 0 }}</p>
             <table class="table table-striped table-with-pointer-row table-with-row-pointer">
                 <tr>
                     <th>Name</th>
@@ -15,8 +14,8 @@
                     <td>{{ country.countryName }}</td>
                     <td>{{ country.countryCode }}</td>
                     <td>{{ country.capital }}</td>
-                    <td>{{ country.areaInSqKm | commaEveryThousand  }}</td>
-                    <td>{{ country.population | commaEveryThousand }}</td>
+                    <td>{{ country.areaInSqKm | intergerVal | commaEveryThousand  }}</td>
+                    <td>{{ country.population | intergerVal | commaEveryThousand }}</td>
                     <td>{{ country.continent }}</td>
                 </tr>
                 <tr ng-if="countriesListControl.countriesSize === 0 && countriesListControl.countriesListLoading === false">

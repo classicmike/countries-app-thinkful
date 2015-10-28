@@ -21,20 +21,17 @@ viewsModule.config(function($routeProvider){
                 //retrieve the country
                 var countryInfo = countryAppInfo(country)
                     .then(function(response){
-                        console.log('Getting the response');
-                        console.log(response);
-
                         var countryResult = response;
 
-                        if(!countryResult.length){
-                            //$location.path('/');
+                        if(!countryResult || typeof countryResult !== 'object'){
+                            $location.path('/');
                         }
 
                         return countryResult;
                     },
                     function(response){
                         console.log(response);
-                        //$location.path('/');
+                        $location.path('/');
                     });
 
                 return countryInfo;
