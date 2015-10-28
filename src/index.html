@@ -3,8 +3,10 @@
 <head>
     <title>Countries &amp; Capitals</title>
     <meta charset="utf-8" />
+    <!-- build:css ./_assets/combined.css -->
     <link type="text/css" href="lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
     <link type="text/css" rel="stylesheet" href="css/app.css"/>
+    <!-- endbuild -->
 </head>
 <body ng-class="{ loading: isLoading }">
 <div class="container">
@@ -25,6 +27,7 @@
         </div>
     </div>
 </div>
+<!-- build:js ./_assets/combined.js -->
 <script type="text/javascript" src="./lib/xml2json/xml2json.js"></script>
 <script type="text/javascript" src="./lib/angular/angular.min.js"></script>
 <script type="text/javascript" src="./lib/angular-route/angular-route.min.js"></script>
@@ -38,5 +41,7 @@
 <script type="text/javascript" src="./country-info/country-info.js"></script>
 <script type="text/javascript" src="./countries-list/countries-list.js"></script>
 <script type="text/javascript" src="./app.js"></script>
+<!-- endbuild -->
+
 </body>
 </html>
