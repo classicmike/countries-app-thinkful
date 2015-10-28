@@ -1,0 +1,63 @@
+<div class="row">
+    <div class="col-xs-12 col-md-6 col-md-offset-3">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h1>{{ countryInfo.country.countryName }}</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <table class="table table-no-border table-responsive table-with-pointer-row table-info">
+
+                            <tr>
+                                <th class="text-right">Population of Country:</th>
+                                <td>{{ countryInfo.country.population | intergerVal | commaEveryThousand }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-right">Area:</th>
+                                <td>{{ countryInfo.country.areaInSqKm | intergerVal | commaEveryThousand }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-right">Capital:</th>
+                                <td>{{ countryInfo.capitalCity.toponymName }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-right">Population of Capital:</th>
+                                <td>{{ countryInfo.capitalCity.population | intergerVal | commaEveryThousand}}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-right">{{ countryInfo.neighbours.length}} neighbours</th>
+                                <td>
+                                    <ul class="neighbours">
+                                        <li ng-repeat="neighbour in countryInfo.neighbours" ><a href="/#/countries/{{neighbour.countryCode}}">{{ neighbour.countryName }}</a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <img ng-src="{{ countryInfo.trustAsSrc(countryInfo.countryFlagUrl)}}" alt="{{countryInfo.country.countryName }}'s flag" class="img-responsive" />
+                                </th>
+                                <td>
+                                    <img ng-src="{{ countryInfo.trustAsSrc(countryInfo.countryMapUrl)}}" alt="{{countryInfo.country.countryName }}'s flag" class="img-responsive" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 text-center">
+        <a href="/" class="btn btn-primary">Home</a>
+        <a href="/#/countries" class="btn btn-primary">Browse Countries</a>
+    </div>
+</div>

@@ -1,0 +1,37 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="countries-table-wrapper">
+            <table class="table table-striped table-with-pointer-row table-with-row-pointer">
+                <tr>
+                    <th>Name</th>
+                    <th>Country Code</th>
+                    <th>Captial</th>
+                    <th>Area in km2</th>
+                    <th>Population</th>
+                    <th>Continent</th>
+                </tr>
+                <tr ng-if="countriesListControl.countriesSize > 0" ng-repeat="country in countriesListControl.countries" ng-click="countriesListControl.goToCountry(country.countryCode)">
+                    <td>{{ country.countryName }}</td>
+                    <td>{{ country.countryCode }}</td>
+                    <td>{{ country.capital }}</td>
+                    <td>{{ country.areaInSqKm | intergerVal | commaEveryThousand  }}</td>
+                    <td>{{ country.population | intergerVal | commaEveryThousand }}</td>
+                    <td>{{ country.continent }}</td>
+                </tr>
+                <tr ng-if="countriesListControl.countriesSize === 0 && countriesListControl.countriesListLoading === false">
+                    <!-- todo: Loading state needs to be in there -->
+                    <td colspan="6">Unfortunately there were no countries.</td>
+                </tr>
+                <tr ng-if="countriesListControl.countriesListLoading === true">
+                    <!-- todo: Loading state needs to be in there -->
+                    <td colspan="6">Getting the list of countries. Please wait...</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 text-center">
+        <a href="/" class="btn btn-primary">Home</a>
+    </div>
+</div>
