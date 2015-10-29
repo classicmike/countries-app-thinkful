@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="countriesApp">
+<head>
+    <title>Countries &amp; Capitals</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="_assets/combined.css"/>
+</head>
+<body ng-class="{ loading: isLoading }">
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <nav class="navbar navbar-inverse">
+                <span class="navbar-brand site-title text-center">
+                    Countries &amp; Capitals
+                </span>
+            </nav>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 animate-view-container">
+            <div class="animate-view" ng-view>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="_assets/combined.js"></script>
+
+</body>
+</html>
