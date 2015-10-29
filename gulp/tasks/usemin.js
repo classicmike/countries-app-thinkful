@@ -7,7 +7,7 @@ var rev = require('gulp-rev');
 
 module.exports = function(useminConfig, indexFile, destination){
     gulp.task('usemin', ['copy'], function(){
-        gulp.src(indexFile)
+        return gulp.src(indexFile)
             .pipe(usemin({
                 css: [minifyCss(), 'concat'],
                 js: [ngmin(), uglify()]

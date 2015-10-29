@@ -6,7 +6,8 @@ var destination = require('../config').destination;
 //clean code
 module.exports = function(cleanConfig, destination){
     gulp.task('clean', function(){
-        gulp.src(destination, {read: false})
+        // task is asynchronous
+        return gulp.src(destination, {read: false})
             .pipe(clean({ force:true }));
     })
 }

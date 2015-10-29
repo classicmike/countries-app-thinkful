@@ -5,7 +5,7 @@ var rev = require('gulp-rev');
 
 module.exports = function(copyConfig, destination){
     gulp.task('copy', ['clean'], function(){
-        gulp.src(copyConfig.assetsToCopy)
+        return gulp.src(copyConfig.assetsToCopy)
             .pipe(gulp.dest(destination))
     });
 };
