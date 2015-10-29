@@ -6,6 +6,7 @@ module.exports = {
     indexFile: src + 'index.html',
     copy: {
         assetsToCopy: [
+            src + ".nojekyll",
             src + '**/*.html',
             '!' + src + 'index.html',
             '!' + src + 'lib/index.html'
