@@ -6,15 +6,12 @@ var uglify = require('gulp-uglify');
 var rev = require('gulp-rev');
 
 module.exports = function(useminConfig, indexFile, destination){
-    console.log('Use min');
     gulp.task('usemin', ['copy'], function(){
-        console.log(indexFile);
-        console.log(destination);
         gulp.src(indexFile)
             .pipe(usemin({
                 css: [minifyCss(), 'concat'],
                 js: [ngmin(), uglify()]
             }))
-            .pipe(gulp.dest(destination + '/'))
+            .pipe(gulp.dest(destination))
     });
 };

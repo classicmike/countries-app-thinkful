@@ -7,6 +7,6 @@ var destination = require('../config').destination;
 module.exports = function(cleanConfig, destination){
     gulp.task('clean', function(){
         gulp.src(destination, {read: false})
-            .pipe(clean());
+            .pipe(clean({ force:true }));
     })
 }

@@ -1,14 +1,14 @@
-var dest = './build';
-var src = './src';
+var dest = './build/';
+var src = './src/';
 
 module.exports = {
     destination: dest,
-    indexFile: src + '/index.html',
+    indexFile: src + 'index.html',
     copy: {
         assetsToCopy: [
-            src + '/**/*.html',
-            '!' + src + '/app/index.html',
-            '!' + src + '/app/lib/index.html'
+            src + '**/*.html',
+            '!' + src + 'index.html',
+            '!' + src + 'lib/index.html'
         ]
     },
     clean: {
@@ -20,13 +20,14 @@ module.exports = {
     },
     images: {
         config: {
-            src: src + '/img/**/*',
-                dest: dest + '/img/'
+            src: src + 'img/**/*',
+                dest: dest + 'img/'
         }
     },
     build: {
         tasks: [
-            'usemin'
+            'usemin',
+            'images'
         ]
     }
 };

@@ -7,7 +7,7 @@ var config = require('./gulp/config');
 
 // lists out all of the tasks that are required for the project
 tasks.clean(config.clean, config.destination);
-//tasks.connect(config.connect);
+tasks.connect(config.connect);
 tasks.copy(config.copy, config.destination);
 tasks.usemin(config.usemin, config.indexFile, config.destination);
 tasks.images(config.images.config);

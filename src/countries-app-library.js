@@ -73,8 +73,6 @@ angular.module('countriesAppLibrary', ['countriesAppHelpers'])
                 //need to run the request for the signature
                 countriesAppAjax(COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET, requestData)
                     .then(function(result){
-                        console.log('Getting the country');
-                        console.log(result.geonames[0]);
                         defer.resolve(result.geonames[0]);
                     }, function(error){
                         defer.reject(error);
@@ -104,12 +102,8 @@ angular.module('countriesAppLibrary', ['countriesAppHelpers'])
             //need to run the request for the signature
             countriesAppAjax(SEARCH_API_ENDPOINT_NAME, AJAX_METHOD_GET, requestData)
                 .then(function(response){
-                    console.log(response);
                     var results = response.geonames;
                     if(response.totalResultsCount > 0){
-                        console.log('The results count is: ' + response.totalResultsCount);
-
-
                         for(var i = 0; i < response.totalResultsCount; i++){
                             var result = results[i];
                             if(result.fcodeName.indexOf('capital') !== false){
@@ -150,7 +144,6 @@ angular.module('countriesAppLibrary', ['countriesAppHelpers'])
             //need to run the request for the signature
             countriesAppAjax(NEIGHBOURS_API_ENDPOINT_NAME, AJAX_METHOD_GET, requestData)
                 .then(function(response){
-                    console.log(response);
                     var results = response.geonames;
                     defer.resolve(results);
                 }, function(error){

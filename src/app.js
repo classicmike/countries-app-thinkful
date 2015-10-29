@@ -14,7 +14,6 @@ angular.module('countriesApp',['countryAppViews', 'ngRoute', 'ngAnimate', 'count
         });
 
         $rootScope.$on('$routeChangeSuccess', function(){
-            console.log('Route Change Success fired');
             $timeout(function(){
                 $rootScope.isLoading = false;
             }, 1000);

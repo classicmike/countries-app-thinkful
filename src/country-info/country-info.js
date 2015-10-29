@@ -8,9 +8,6 @@ viewsModule.config(function($routeProvider){
             '$route',
             '$location',
             function(countryAppInfo, $route, $location){
-
-                console.log('Need to resolve the country');
-                console.log($route.current.params);
                 //get the country information
                 var country = $route.current.params.country;
 
@@ -30,7 +27,6 @@ viewsModule.config(function($routeProvider){
                         return countryResult;
                     },
                     function(response){
-                        console.log(response);
                         $location.path('/');
                     });
 
@@ -42,7 +38,6 @@ viewsModule.config(function($routeProvider){
 }).controller('CountryInfoController', ['$q', '$sce' , 'countryDetails', 'countryAppCapitalInfo', 'countryAppNeighboursInfo', function($q, $sce, countryDetails, countryAppCapitalInfo, countryAppNeighboursInfo){
     this.init = function(country){
         this.country = country;
-        console.log(this.country.countryCode);
 
         this.countryFlagUrl = 'http://www.geonames.org/flags/x/' + this.country.countryCode.toLowerCase() + '.gif';
         this.countryMapUrl = 'http://www.geonames.org/img/country/250/' + this.country.countryCode + '.png';
@@ -60,7 +55,6 @@ viewsModule.config(function($routeProvider){
     };
 
     this.trustAsSrc = function(src){
-        console.log($sce);
         if(!src){
             return;
         }
@@ -87,11 +81,8 @@ viewsModule.config(function($routeProvider){
     };
 
     this.processError = function(error){
-        console.log(error);
         alert('Unfortunately an error has occurred in retrieving the capital city. Please check the logs for more details.');
     };
-    console.log('Resolving country');
-    console.log(countryDetails);
 
     this.init(countryDetails);
 

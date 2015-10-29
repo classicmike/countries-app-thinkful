@@ -17,7 +17,6 @@ viewsModule.config(function($routeProvider){
 
 
     this.retrieveCountries = function(){
-        console.log('Countries loading is fired');
         this.countriesListLoading = true;
 
         //countries list loaded
