@@ -14,5 +14,5 @@ describe('countriesAppFilters', function(){
             var commaEveryThousandFilter = $filter('commaEveryThousand');
             expect(commaEveryThousandFilter(145000)).toMatch(/^(?!0+\.00)(?=.{1,9}(\.|$))(?!0(?!\.))\d{1,3}(,\d{3})*(\.\d+)?$/);
         }));
-    })
+    });
 });

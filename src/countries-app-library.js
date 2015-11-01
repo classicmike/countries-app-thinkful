@@ -14,6 +14,9 @@ angular.module('countriesAppLibrary', ['countriesAppHelpers'])
 
             countriesAppAjax(COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET)
                 .then(function(result){
+                    console.log('Gettting the results');
+                   console.log(result);
+
                    defer.resolve(result);
                 }, function(error){
                     defer.reject(error);
@@ -48,8 +51,12 @@ angular.module('countriesAppLibrary', ['countriesAppHelpers'])
             var defer = $q.defer();
 
             $http(config).then(function(response){
+                console.log('Getting the success response');
+                console.log(response.data);
                 defer.resolve(response.data);
             }, function(error){
+                console.log('Getting the error data');
+                console.log(error);
                 defer.reject(error);
             });
 
