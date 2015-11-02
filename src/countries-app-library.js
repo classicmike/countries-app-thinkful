@@ -11,14 +11,16 @@ angular.module('countriesAppLibrary', ['countriesAppHelpers'])
         // going to get the http request for the
         return function(){
             var defer = $q.defer();
+            console.log('countriesAppCountries IS RUN');
 
             countriesAppAjax(COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET)
                 .then(function(result){
                     console.log('Gettting the results');
-                   console.log(result);
+                    console.log(result);
 
                    defer.resolve(result);
                 }, function(error){
+                    console.log('countriesAppCountries: There has been an error in this factory');
                     defer.reject(error);
                 });
 
