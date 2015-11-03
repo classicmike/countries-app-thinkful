@@ -1,17 +1,12 @@
 describe('countriesAppLibrary', function () {
     beforeEach(module('countriesAppLibrary'));
 
-    /*beforeEach(function(){
-     module('countryAppsLibrary');
-
-     module(function($provide){
-     // Fake Get list of countries
-     })
-     });*/
-
-    //test out the counttires app ajax
+    /**
+     * Unit test for the countriesAppAjax Factory
+     */
     describe("countriesAppAjax", function(){
      it('should make a standard ajax request to the geonames API sucessfully', inject(function(countriesAppAjax, $rootScope, $httpBackend, API_URL, API_USERNAME, COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET, API_URL_REPLACE){
+         console.log('need to test the countriesAppAjax functionality');
          var requestUrl = API_URL.replace(API_URL_REPLACE, COUNTRIES_API_ENDPOINT_NAME) + API_USERNAME;
 
          //we are expecting that the request is completed successfully
@@ -20,7 +15,8 @@ describe('countriesAppLibrary', function () {
          var requestStatus = false;
 
          countriesAppAjax(COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET).then(function(){
-         requestStatus = true;
+            console.log('Response');
+            requestStatus = true;
          });
 
          $rootScope.$digest();
@@ -56,13 +52,16 @@ describe('countriesAppLibrary', function () {
             ]
         };
 
-
-
         var countriesError = {
             status: {
                 message: "user does not exist",
                 value: 10
             }
+        };
+
+        var caughtCountriesError = {
+            type: 'error',
+            message: 'unfortunately an error has occurred'
         };
 
 
@@ -107,6 +106,30 @@ describe('countriesAppLibrary', function () {
                 $rootScope.$digest();
             });
 
+        });
+
+        it('should attempt to get a list of countries however the result will fail and be caught out', function(){
+            module(function($provide){
+                $provide.factory('countriesAppAjax', function($q){
+                    return function(){
+                        var deferred = $q.defer();
+                        deferred.reject(caughtCountriesError);
+                        return deferred.promise;
+                    }
+                });
+            });
+
+            inject(function(countriesAppCountries, $rootScope){
+                var promiseFlag = true;
+                countriesAppCountries().catch(function(result){
+                    console.log('An error in the promise has been caught and thus been rejected');
+                    console.log(result);
+                    promiseFlag = false;
+                });
+
+                $rootScope.$digest();
+                expect(promiseFlag).toBe(false);
+            });
 
         });
 
