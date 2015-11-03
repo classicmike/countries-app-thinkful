@@ -58,6 +58,14 @@ describe('countriesAppLibrary', function () {
 
 
 
+        var countriesError = {
+            status: {
+                message: "user does not exist",
+                value: 10
+            }
+        };
+
+
         it('should get a list of countries successfully', function(){
             module(function($provide){
                 $provide.factory('countriesAppAjax', function($q){
@@ -70,9 +78,7 @@ describe('countriesAppLibrary', function () {
             });
 
             inject(function(countriesAppCountries, $rootScope){
-                var returnedPromise = countriesAppCountries();
-
-                returnedPromise.then(function(result){
+                countriesAppCountries().then(function(result){
                     //expect the returned promise to have a list of countries equal to the mocked countries object
                     expect(result).toEqual(countriesMockResponse);
                 });
@@ -80,6 +86,28 @@ describe('countriesAppLibrary', function () {
                 $rootScope.$digest();
 
             });
+        });
+
+        it('should get attempt to a list of countries however fail due to api error', function(){
+            module(function($provide){
+                $provide.factory('countriesAppAjax', function($q){
+                    return function(){
+                        var deferred = $q.defer();
+                        deferred.resolve(countriesError);
+                        return deferred.promise;
+                    }
+                });
+            });
+
+            inject(function(countriesAppCountries, $rootScope){
+                countriesAppCountries().then(function(result){
+                    expect(result).toEqual(countriesError);
+                });
+
+                $rootScope.$digest();
+            });
+
+
         });
 
     });

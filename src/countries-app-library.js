@@ -15,12 +15,8 @@ angular.module('countriesAppLibrary', ['countriesAppHelpers'])
 
             countriesAppAjax(COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET)
                 .then(function(result){
-                    console.log('Gettting the results');
-                    console.log(result);
-
                    defer.resolve(result);
                 }, function(error){
-                    console.log('countriesAppCountries: There has been an error in this factory');
                     defer.reject(error);
                 });
 
