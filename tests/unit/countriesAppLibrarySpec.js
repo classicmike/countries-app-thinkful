@@ -59,8 +59,6 @@ describe('countriesAppLibrary', function () {
 
 
         it('should get a list of countries successfully', function(){
-            //fake the countries app ajax factory
-
             module(function($provide){
                 $provide.factory('countriesAppAjax', function($q){
                     return function(){
