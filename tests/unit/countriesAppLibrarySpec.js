@@ -10,27 +10,27 @@ describe('countriesAppLibrary', function () {
      });*/
 
     //test out the counttires app ajax
-    /*describe("countriesAppAjax", function(){
+    describe("countriesAppAjax", function(){
      it('should make a standard ajax request to the geonames API sucessfully', inject(function(countriesAppAjax, $rootScope, $httpBackend, API_URL, API_USERNAME, COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET, API_URL_REPLACE){
-     var requestUrl = API_URL.replace(API_URL_REPLACE, COUNTRIES_API_ENDPOINT_NAME) + API_USERNAME;
+         var requestUrl = API_URL.replace(API_URL_REPLACE, COUNTRIES_API_ENDPOINT_NAME) + API_USERNAME;
 
-     //we are expecting that the request is completed successfully
-     $httpBackend.expect(AJAX_METHOD_GET, requestUrl).respond(200);
+         //we are expecting that the request is completed successfully
+         $httpBackend.expect(AJAX_METHOD_GET, requestUrl).respond(200);
 
-     var requestStatus = false;
+         var requestStatus = false;
 
-     countriesAppAjax(COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET).then(function(){
-     requestStatus = true;
+         countriesAppAjax(COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET).then(function(){
+         requestStatus = true;
+         });
+
+         $rootScope.$digest();
+         $httpBackend.flush();
+
+         expect(requestStatus).toBe(true);
+         $httpBackend.verifyNoOutstandingRequest();
+
+        }));
      });
-
-     $rootScope.$digest();
-     $httpBackend.flush();
-
-     expect(requestStatus).toBe(true);
-     $httpBackend.verifyNoOutstandingRequest();
-
-     }));
-     });*/
 
     describe("countriesAppCountries", function(){
         var countriesMockResponse = {
@@ -56,34 +56,30 @@ describe('countriesAppLibrary', function () {
             ]
         };
 
-        it('should get a list of countries', function(done){
+
+
+        it('should get a list of countries successfully', function(){
             //fake the countries app ajax factory
 
             module(function($provide){
                 $provide.factory('countriesAppAjax', function($q){
                     return function(){
-                        console.log('Going to return a promise');
                         var deferred = $q.defer();
                         deferred.resolve(countriesMockResponse);
-                        console.log(deferred.promise);
-
                         return deferred.promise;
                     }
                 });
             });
 
-            inject(function(countriesAppCountries){
+            inject(function(countriesAppCountries, $rootScope){
                 var returnedPromise = countriesAppCountries();
-                console.log(returnedPromise);
 
                 returnedPromise.then(function(result){
-                    console.log('Promise Statisfied');
                     //expect the returned promise to have a list of countries equal to the mocked countries object
                     expect(result).toEqual(countriesMockResponse);
-                }, function(error){
-                    console.log(error);
-                    console.log('AN ERROR HAS OCCURRED');
-                }).then(done);
+                });
+
+                $rootScope.$digest();
 
             });
         });
