@@ -62,7 +62,8 @@ angular.module('countriesAppLibrary', ['countriesAppHelpers'])
 
                 //if no country was supplied....
                 if(!country){
-                    $q.reject({type: 'no-country', message: 'No country was supplied'});
+                    defer.reject({type: 'no-country', message: 'No country was supplied'});
+                    return defer.promise;
                 }
 
                 //request data
@@ -73,6 +74,8 @@ angular.module('countriesAppLibrary', ['countriesAppHelpers'])
                 //need to run the request for the signature
                 countriesAppAjax(COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET, requestData)
                     .then(function(result){
+                        console.log('Returning the promise');
+                        console.log(result);
                         defer.resolve(result.geonames[0]);
                     }, function(error){
                         defer.reject(error);
@@ -88,7 +91,8 @@ angular.module('countriesAppLibrary', ['countriesAppHelpers'])
 
             //if no country was supplied....
             if(!capitalCity || !country){
-                $q.reject({type: 'no-capital', message: 'No Capital City or Country Code was supplied'});
+                defer.reject({type: 'no-capital', message: 'No Capital City or Country Code was supplied'});
+                return defer.promise;
             }
 
             //request data
@@ -134,6 +138,7 @@ angular.module('countriesAppLibrary', ['countriesAppHelpers'])
             //if no country was supplied....
             if(!geonameId){
                 defer.reject({type: 'no-geoname-id', message: 'No Geoname id was supplied'});
+                return defer.promise;
             }
 
             //request data

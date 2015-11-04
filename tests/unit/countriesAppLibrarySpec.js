@@ -5,29 +5,70 @@ describe('countriesAppLibrary', function () {
      * Unit test for the countriesAppAjax Factory
      */
     describe("countriesAppAjax", function(){
-     it('should make a standard ajax request to the geonames API sucessfully', inject(function(countriesAppAjax, $rootScope, $httpBackend, API_URL, API_USERNAME, COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET, API_URL_REPLACE){
-         console.log('need to test the countriesAppAjax functionality');
-         var requestUrl = API_URL.replace(API_URL_REPLACE, COUNTRIES_API_ENDPOINT_NAME) + API_USERNAME;
+        var _countriesAppAjax, $_rootScope, $_httpBackend, API_URL_CONSTANT, API_USERNAME_CONSTANT, COUNTRIES_API_ENDPOINT_NAME_CONSTANT, AJAX_METHOD_GET_CONSTANT, API_URL_REPLACE_CONSTANT;
 
-         //we are expecting that the request is completed successfully
-         $httpBackend.expect(AJAX_METHOD_GET, requestUrl).respond(200);
-
-         var requestStatus = false;
-
-         countriesAppAjax(COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET).then(function(){
-            console.log('Response');
-            requestStatus = true;
-         });
-
-         $rootScope.$digest();
-         $httpBackend.flush();
-
-         expect(requestStatus).toBe(true);
-         $httpBackend.verifyNoOutstandingRequest();
-
+        beforeEach(inject(function(countriesAppAjax, $rootScope, $httpBackend, API_URL, API_USERNAME, COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET, API_URL_REPLACE){
+            _countriesAppAjax = countriesAppAjax;
+            $_rootScope = $rootScope;
+            $_httpBackend = $httpBackend;
+            API_URL_CONSTANT = API_URL;
+            API_USERNAME_CONSTANT = API_USERNAME;
+            COUNTRIES_API_ENDPOINT_NAME_CONSTANT = COUNTRIES_API_ENDPOINT_NAME;
+            AJAX_METHOD_GET_CONSTANT = AJAX_METHOD_GET;
+            API_URL_REPLACE_CONSTANT = API_URL_REPLACE;
         }));
-     });
 
+
+        it('should make a standard ajax request to the geonames API sucessfully', function(){
+            var requestUrl = API_URL_CONSTANT.replace(API_URL_REPLACE_CONSTANT, COUNTRIES_API_ENDPOINT_NAME_CONSTANT) + API_USERNAME_CONSTANT;
+
+            //we are expecting that the request is completed successfully
+            $_httpBackend.expect(AJAX_METHOD_GET_CONSTANT, requestUrl).respond(200);
+
+            var requestStatus = false;
+
+            _countriesAppAjax(COUNTRIES_API_ENDPOINT_NAME_CONSTANT, AJAX_METHOD_GET_CONSTANT).then(function(){
+                requestStatus = true;
+            });
+
+            $_rootScope.$digest();
+            $_httpBackend.flush();
+
+            expect(requestStatus).toBe(true);
+            $_httpBackend.verifyNoOutstandingRequest();
+        });
+
+        it('should make a starndard ajax request to the geonames to the API and an error occurs', function(){
+            var requestUrl = API_URL_CONSTANT.replace(API_URL_REPLACE_CONSTANT, COUNTRIES_API_ENDPOINT_NAME_CONSTANT) + API_USERNAME_CONSTANT;
+
+            //we are expecting that the request is completed successfully
+            $_httpBackend.expect(AJAX_METHOD_GET_CONSTANT, requestUrl).respond(500);
+
+            var requestStatus = true;
+
+            _countriesAppAjax(COUNTRIES_API_ENDPOINT_NAME_CONSTANT, AJAX_METHOD_GET_CONSTANT).then(function(){
+                requestStatus = true;
+            }).catch(function(){
+                requestStatus = false;
+            });
+
+            $_rootScope.$digest();
+            $_httpBackend.flush();
+
+            expect(requestStatus).toBe(false);
+            $_httpBackend.verifyNoOutstandingRequest();
+        });
+
+
+
+    });
+
+
+
+
+    /**
+     * Unit test for the countriesAppAjax Factory
+     */
     describe("countriesAppCountries", function(){
         var countriesMockResponse = {
             geonames: [
@@ -122,8 +163,6 @@ describe('countriesAppLibrary', function () {
             inject(function(countriesAppCountries, $rootScope){
                 var promiseFlag = true;
                 countriesAppCountries().catch(function(result){
-                    console.log('An error in the promise has been caught and thus been rejected');
-                    console.log(result);
                     promiseFlag = false;
                 });
 
@@ -134,4 +173,102 @@ describe('countriesAppLibrary', function () {
         });
 
     });
+
+    /**
+     *  Unit Tests on the Country App Info Factory
+     */
+    describe('countryAppInfo', function(){
+        var countryMockResponse = {
+            geonames: [
+                {
+                    "areaInSqKm": "7686850.0",
+                    "capital": "Canberra",
+                    "continent": "OC",
+                    "continentName": "Oceania",
+                    "Country Code": "AU",
+                    "Country Name": "Australia",
+                    "population": "21515754"
+                }
+            ]
+        };
+
+        var countryError = {
+            status: {
+                message: "user does not exist",
+                value: 10
+            }
+        };
+
+        it('should return a country object', function(){
+            module(function($provide){
+                $provide.factory('countriesAppAjax', function($q){
+                    return function(){
+                        console.log('Mock function is being run');
+                        var deferred = $q.defer();
+                        deferred.resolve(countryMockResponse);
+                        return deferred.promise;
+                    }
+                });
+            });
+
+            inject(function(countryAppInfo, $rootScope){
+                countryAppInfo('AU').then(function(result){
+                    console.log(result);
+
+                    //we would then need to take the single instance of a country from the array.
+                    var mockResultToEvaluate = countryMockResponse.geonames[0];
+                    expect(result).toEqual(mockResultToEvaluate);
+                });
+
+                $rootScope.$digest();
+            });
+
+        });
+
+        it('should attempt to return a country object but fail due to no parameter being supplied', function(){
+            var promiseStatus = true;
+            inject(function(countryAppInfo, $rootScope){
+                countryAppInfo().then(function(result){
+                    promiseStatus = true;
+                }, function(error){
+                    console.log(error);
+                    promiseStatus = false;
+                });
+
+                $rootScope.$digest();
+
+                expect(promiseStatus).toBe(false);
+            });
+        });
+
+        it('should attempt to return a country object but fail due to API error.', function(){
+            module(function($provide){
+                $provide.factory('countriesAppAjax', function($q){
+                    return function(){
+                        var deferred = $q.defer();
+                        deferred.reject(countryError);
+                        return deferred.promise;
+                    }
+                });
+            });
+
+
+            inject(function(countryAppInfo, $rootScope){
+                countryAppInfo('AU').catch(function(error){
+                    console.log('An error has occurred.');
+                    expect(error).toEqual(countryError);
+                });
+
+                $rootScope.$digest();
+            });
+        });
+    });
+
+
+    /**
+     * Unit Tests for retrieving the capital cities
+     */
+
+
+
 });
