@@ -27,6 +27,62 @@ describe('countryAppViews', function(){
     });
 
     describe('countries-list', function(){
+        describe('countriesListController', function(){
+            var controller, scope;
+            module('countriesAppLibrary');
+
+            beforeEach(inject(function($controller, $rootScope){
+                scope = $rootScope.$new();
+                controller = $controller('CountriesListController as countriesListControl', {
+                    $scope: scope
+                });
+            }));
+
+            var mockApiCountiresListResults = {
+                geonames: [
+                    {
+                        "areaInSqKm": "468.0",
+                        "capital": "Andorra la Vella",
+                        "continent": "EU",
+                        "continentName": "Europe",
+                        "Country Code": "AD",
+                        "Country Name": "Andorra",
+                        "population": "84000"
+                    },
+                    {
+                        "areaInSqKm": "7686850.0",
+                        "capital": "Canberra",
+                        "continent": "OC",
+                        "continentName": "Oceania",
+                        "Country Code": "AU",
+                        "Country Name": "Australia",
+                        "population": "21515754"
+                    }
+                ]
+            };
+
+            it('should load the controller with a list of countries', function(){
+
+                inject(function($httpBackend){
+                    var requestUrl = 'http://api.geonames.org/countryInfoJSON?username=koramaiku';
+
+                    $httpBackend.whenGET(requestUrl).respond(mockApiCountiresListResults);
+
+                    controller.init();
+
+                    scope.$digest();
+                    $httpBackend.flush();
+
+                    expect(controller.countries).toEqual(mockApiCountiresListResults.geonames);
+                    expect(controller.countriesSize).toBe(mockApiCountiresListResults.geonames.length);
+
+                    $httpBackend.verifyNoOutstandingRequest();
+                    $httpBackend.verifyNoOutstandingExpectation();
+
+                });
+            });
+        });
+
         describe('/countries route', function(){
             it('should load the template controller and call the resolve', function(){
                 inject(function($location, $rootScope, $httpBackend, $route){

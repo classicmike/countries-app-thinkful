@@ -38,7 +38,7 @@ describe('countriesAppLibrary', function () {
             $_httpBackend.verifyNoOutstandingRequest();
         });
 
-        it('should make a starndard ajax request to the geonames to the API and an error occurs', function(){
+        it('should make a standard ajax request to the geonames to the API and an error occurs', function(){
             var requestUrl = API_URL_CONSTANT.replace(API_URL_REPLACE_CONSTANT, COUNTRIES_API_ENDPOINT_NAME_CONSTANT) + API_USERNAME_CONSTANT;
 
             //we are expecting that the request is completed successfully
@@ -228,7 +228,6 @@ describe('countriesAppLibrary', function () {
                 countryAppInfo().then(function(result){
                     promiseStatus = true;
                 }, function(error){
-                    console.log(error);
                     promiseStatus = false;
                 });
 
@@ -343,7 +342,6 @@ describe('countriesAppLibrary', function () {
                     }
                 });
             });
-
 
             inject(function(countryAppNeighboursInfo, $rootScope){
                 var promiseStatus = true;
