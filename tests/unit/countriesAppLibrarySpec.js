@@ -192,7 +192,7 @@ describe('countriesAppLibrary', function () {
             ]
         };
 
-        var countryError = {
+        var mockAPIError = {
             status: {
                 message: "user does not exist",
                 value: 10
@@ -203,7 +203,6 @@ describe('countriesAppLibrary', function () {
             module(function($provide){
                 $provide.factory('countriesAppAjax', function($q){
                     return function(){
-                        console.log('Mock function is being run');
                         var deferred = $q.defer();
                         deferred.resolve(countryMockResponse);
                         return deferred.promise;
@@ -213,8 +212,6 @@ describe('countriesAppLibrary', function () {
 
             inject(function(countryAppInfo, $rootScope){
                 countryAppInfo('AU').then(function(result){
-                    console.log(result);
-
                     //we would then need to take the single instance of a country from the array.
                     var mockResultToEvaluate = countryMockResponse.geonames[0];
                     expect(result).toEqual(mockResultToEvaluate);
@@ -246,17 +243,15 @@ describe('countriesAppLibrary', function () {
                 $provide.factory('countriesAppAjax', function($q){
                     return function(){
                         var deferred = $q.defer();
-                        deferred.reject(countryError);
+                        deferred.reject(mockAPIError);
                         return deferred.promise;
                     }
                 });
             });
 
-
             inject(function(countryAppInfo, $rootScope){
                 countryAppInfo('AU').catch(function(error){
-                    console.log('An error has occurred.');
-                    expect(error).toEqual(countryError);
+                    expect(error).toEqual(mockAPIError);
                 });
 
                 $rootScope.$digest();
@@ -266,9 +261,261 @@ describe('countriesAppLibrary', function () {
 
 
     /**
-     * Unit Tests for retrieving the capital cities
+     * Unit Tests for retrieving the Neighbours
+     */
+    describe('countryAppNeighboursInfo', function(){
+
+        var mockCountriesNeighbours = {
+            geonames: [
+                {
+                    "areaInSqKm": "468.0",
+                    "capital": "Andorra la Vella",
+                    "continent": "EU",
+                    "continentName": "Europe",
+                    "Country Code": "AD",
+                    "Country Name": "Andorra",
+                    "population": "84000"
+                },
+                {
+                    "areaInSqKm": "7686850.0",
+                    "capital": "Canberra",
+                    "continent": "OC",
+                    "continentName": "Oceania",
+                    "Country Code": "AU",
+                    "Country Name": "Australia",
+                    "population": "21515754"
+                }
+            ]
+        };
+
+        var mockAPIError = {
+            status: {
+                message: "user does not exist",
+                value: 10
+            }
+        };
+
+        it('should attempt to return a list of neighbours for a particular country and be successful', function(){
+            module(function($provide){
+                $provide.factory('countriesAppAjax', function($q){
+                    return function(){
+                        var deferred = $q.defer();
+                        deferred.resolve(mockCountriesNeighbours);
+                        return deferred.promise;
+                    }
+                });
+            });
+
+            inject(function(countryAppNeighboursInfo, $rootScope){
+                var promiseStatus = false;
+                var promiseObject;
+                countryAppNeighboursInfo('1218197').then(function(result){
+                    promiseStatus = true;
+                    promiseObject = result;
+                });
+
+                $rootScope.$digest();
+                expect(promiseStatus).toBe(true);
+            });
+        });
+
+        it('should attempt to return a list of neighbours for a particular country but fail due to no parameter', function(){
+            inject(function(countryAppNeighboursInfo, $rootScope){
+                var promiseStatus = true;
+                countryAppNeighboursInfo().then(function(result){
+                    promiseStatus = true;
+                }).catch(function(error){
+                    promiseStatus = false;
+                });
+
+                $rootScope.$digest();
+                expect(promiseStatus).toBe(false)
+            });
+        });
+
+        it('should fail due to API error', function(){
+            module(function($provide){
+                $provide.factory('countriesAppAjax', function($q){
+                    return function(){
+                        var deferred = $q.defer();
+                        deferred.reject(mockAPIError);
+                        return deferred.promise;
+                    }
+                });
+            });
+
+
+            inject(function(countryAppNeighboursInfo, $rootScope){
+                var promiseStatus = true;
+                var promiseObject = {};
+
+                countryAppNeighboursInfo('TM').then(function(result){
+                    promiseStatus = true;
+                    promiseObject = result;
+                }).catch(function(error){
+                    promiseStatus = false;
+                    promiseObject = error;
+                });
+
+                $rootScope.$digest();
+                expect(promiseStatus).toBe(false);
+                expect(promiseObject).toEqual(mockAPIError);
+            });
+        });
+
+    });
+
+
+    /**
+     * Unit tests for retrieving the captial cities
      */
 
+    describe('countryAppCapitalInfo', function(){
+        var mockAPIError = {
+            status: {
+                message: "user does not exist",
+                value: 10
+            }
+        };
+
+        var mockAPIResult = {
+            totalResultsCount: 2,
+            geonames: [
+                {
+                    adminCode1: "07",
+                    adminName1: "Mayorality of Baghdad",
+                    countryCode: "IQ",
+                    countryId: "99237",
+                    countryName: "Iraq",
+                    fcl: "P",
+                    fclName: "city, village,...",
+                    fcode: "PPLC",
+                    fcodeName: "capital of a political entity",
+                    geonameId: 98182,
+                    lat: "33.34058",
+                    lng: "44.40088",
+                    population: 5672513,
+                    toponymName: "Baghdad"
+                },
+                {
+                    adminCode1: "07",
+                    adminName1: "Mayorality of Baghdad",
+                    countryCode: "IQ",
+                    countryId: "99237",
+                    countryName: "Iraq",
+                    fcl: "A",
+                    fclName: "country, state, region,...",
+                    fcode: "ADM1",
+                    fcodeName: "first-order administrative division",
+                    geonameId: 98180,
+                    name: "Mayorality of Baghdad",
+                    lat: "33.34058",
+                    lng: "44.40088",
+                    population: 0,
+                    toponymName: "Muḩāfaz̧at Baghdād"
+                }
+            ]
+        };
+
+        var mockResultSuccess = {
+            adminCode1: "07",
+            adminName1: "Mayorality of Baghdad",
+            countryCode: "IQ",
+            countryId: "99237",
+            countryName: "Iraq",
+            fcl: "P",
+            fclName: "city, village,...",
+            fcode: "PPLC",
+            fcodeName: "capital of a political entity",
+            geonameId: 98182,
+            lat: "33.34058",
+            lng: "44.40088",
+            population: 5672513,
+            toponymName: "Baghdad"
+        };
+
+        it('should attempt and successfully return capital city information', function(){
+            module(function($provide){
+                $provide.factory('countriesAppAjax', function($q){
+                   return function(){
+                       var deferred = $q.defer();
+                       deferred.resolve(mockAPIResult);
+                       return deferred.promise;
+                   }
+                });
+            });
+
+
+            inject(function(countryAppCapitalInfo, $rootScope){
+                var promiseStatus = false;
+                var promiseObject = undefined;
+
+                countryAppCapitalInfo('IQ', 'Baghdad').then(function(result){
+                    promiseStatus = true;
+                    promiseObject = result;
+                });
+
+                $rootScope.$digest();
+                expect(promiseStatus).toBe(true);
+                expect(promiseObject).toEqual(mockResultSuccess);
+            });
+        });
+
+        it('should attempt to return a list of object that relate to a capital city but fail due to insufficient parameters', function(){
+            inject(function(countryAppCapitalInfo, $rootScope){
+
+                //need to test if code catches on no parameters
+                var noParameterPromiseStatus = true;
+                countryAppCapitalInfo().catch(function(){
+                    noParameterPromiseStatus = false;
+                });
+
+                //need to test if code catches on one parameter on either side
+                var onlyCountryParameterPromiseStatus = true;
+                countryAppCapitalInfo('IQ').catch(function(){
+                    onlyCountryParameterPromiseStatus = false;
+                });
+
+                var onlyCapitalParameterPromiseStatus = true;
+                countryAppCapitalInfo(undefined, 'Baghdad').catch(function(){
+                    onlyCapitalParameterPromiseStatus = false;
+                });
+
+                $rootScope.$digest();
+                expect(noParameterPromiseStatus).toBe(false);
+                expect(onlyCountryParameterPromiseStatus).toBe(false);
+                expect(onlyCapitalParameterPromiseStatus).toBe(false);
+            })
+        });
+
+        it('should fail due to API error', function(){
+            module(function($provide){
+                $provide.factory('countriesAppAjax', function($q){
+                    return function(){
+                        var deferred = $q.defer();
+                        deferred.reject(mockAPIError);
+                        return deferred.promise;
+                    }
+                });
+
+                inject(function(countryAppCapitalInfo, $rootScope){
+                    var promiseStatus = true;
+                    var promiseObject = undefined;
+
+                    //proceed to catch
+                    countryAppCapitalInfo('IQ', 'Baghdad').catch(function(error){
+                        var promiseStatus = false;
+                        var promiseObject = error;
+                    });
+
+                    $rootScope.$digest();
+                    expect(promiseStatus).toBe(false);
+                    expect(promiseObject).toBe(mockAPIError);
+
+                });
+            });
+        });
+    });
 
 
 });
