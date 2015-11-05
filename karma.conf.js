@@ -19,7 +19,7 @@ module.exports = function(config) {
         './src/lib/angular-mocks/angular-mocks.js',
         './src/lib/angular-route/angular-route.js',
         './src/lib/angular-animate/angular-animate.js',
-        './tests/**/*Spec.js',
+        './src/lib/angular-messages/angular-messages.js',
         './src/countries-app-helpers.js',
         './src/countries-app-filters.js',
         './src/countries-app-library.js',
@@ -27,7 +27,8 @@ module.exports = function(config) {
         './src/home/home.js',
         './src/country-info/country-info.js',
         './src/countries-list/countries-list.js',
-        './src/app.js'
+        './src/app.js',
+        './tests/**/*Spec.js'
     ],
 
 
