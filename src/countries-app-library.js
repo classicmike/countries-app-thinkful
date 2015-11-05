@@ -104,7 +104,6 @@ angular.module('countriesAppLibrary', ['countriesAppHelpers'])
             //need to run the request for the signature
             countriesAppAjax(SEARCH_API_ENDPOINT_NAME, AJAX_METHOD_GET, requestData)
                 .then(function(response){
-                    console.log(response);
                     var results = response.geonames;
                     if(response.totalResultsCount > 0){
                         for(var i = 0; i < response.totalResultsCount; i++){
@@ -149,7 +148,6 @@ angular.module('countriesAppLibrary', ['countriesAppHelpers'])
             countriesAppAjax(NEIGHBOURS_API_ENDPOINT_NAME, AJAX_METHOD_GET, requestData)
                 .then(function(response){
                     var results = response.geonames;
-                    console.log(response);
                     defer.resolve(results);
                 }, function(error){
                     defer.reject(error);

@@ -73,7 +73,6 @@ describe('countryAppViews', function(){
                        $location.path('/countries/:country');
                    });
 
-                   console.log($route.current.controller);
                    expect($route.current.controller).toBe("CountryInfoController as countryInfo");
                    expect($route.current.loadedTemplateUrl).toBe("./country-info/country-info.html");
 
@@ -84,5 +83,4 @@ describe('countryAppViews', function(){
            });
         });
     });
-
 });
