@@ -74,8 +74,6 @@ angular.module('countriesAppLibrary', ['countriesAppHelpers'])
                 //need to run the request for the signature
                 countriesAppAjax(COUNTRIES_API_ENDPOINT_NAME, AJAX_METHOD_GET, requestData)
                     .then(function(result){
-                        console.log('Returning the promise');
-                        console.log(result);
                         defer.resolve(result.geonames[0]);
                     }, function(error){
                         defer.reject(error);
