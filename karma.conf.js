@@ -25,8 +25,8 @@ module.exports = function(config) {
         './src/countries-app-library.js',
         './src/app-views.js',
         './src/home/home.js',
-        './src/country-info/country-info.js',
         './src/countries-list/countries-list.js',
+        './src/country-info/country-info.js',
         './src/app.js',
         './tests/**/*Spec.js'
     ],

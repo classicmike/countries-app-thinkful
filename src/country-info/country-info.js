@@ -4,37 +4,37 @@ viewsModule.config(function($routeProvider){
     controller: 'CountryInfoController as countryInfo',
     resolve: {
         countryDetails: [
-            'countryAppInfo',
-            '$route',
-            '$location',
-            function(countryAppInfo, $route, $location){
-                //get the country information
-                var country = $route.current.params.country;
+                'countryAppInfo',
+                '$route',
+                '$location',
+                function(countryAppInfo, $route, $location){
+                    //get the country information
+                    var country = $route.current.params.country;
 
-                if(!country){
-                    $location.path('/');
-                }
-
-                //retrieve the country
-                var countryInfo = countryAppInfo(country)
-                    .then(function(response){
-                        var countryResult = response;
-
-                        if(!countryResult || typeof countryResult !== 'object'){
-                            $location.path('/');
-                        }
-
-                        return countryResult;
-                    },
-                    function(response){
+                    if(!country){
                         $location.path('/');
-                    });
+                    }
 
-                return countryInfo;
-            }
-        ]
-    }
-})
+                    //retrieve the country
+                    var countryInfo = countryAppInfo(country)
+                        .then(function(response){
+                            var countryResult = response;
+
+                            if(!countryResult || typeof countryResult !== 'object'){
+                                $location.path('/');
+                            }
+
+                            return countryResult;
+                        },
+                        function(response){
+                            $location.path('/');
+                        });
+
+                    return countryInfo;
+                }
+            ]
+        }
+    })
 }).controller('CountryInfoController', ['$q', '$sce' , 'countryDetails', 'countryAppCapitalInfo', 'countryAppNeighboursInfo', function($q, $sce, countryDetails, countryAppCapitalInfo, countryAppNeighboursInfo){
     this.init = function(country){
         this.country = country;
